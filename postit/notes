@@ -1,0 +1,83 @@
+
+1 - npx create-next-app@latest --experimental-app
+
+2 - npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+
+https://railway.app/
+created postgres database
+https://www.prisma.io/
+
+npm install prisma typescript ts-node @types/node --save-dev
+
+npx prisma init
+
+Install Prisma Client
+TypeScript
+PostgreSQL
+Install and generate Prisma Client
+To get started with Prisma Client, you need to install the @prisma/client package:
+
+npm install @prisma/client
+
+to create tables into prisma using commands
+npx prisma migrate dev
+
+npx prisma migrate dev --name init
+
+https://next-auth.js.org/
+
+
+google developer console
+create new project 
+    
+
+
+    
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+
+npx prisma migrate dev
