@@ -1,20 +1,26 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "name" TEXT,
+    "email" TEXT,
+    "emailVerified" TIMESTAMP(3),
+    "image" TEXT,
 
-  - The primary key for the `Post` table will be changed. If it partially fails, the table could be left without primary key constraint.
-  - You are about to drop the column `authorId` on the `Post` table. All the data in the column will be lost.
-  - Added the required column `userId` to the `Post` table without a default value. This is not possible if the table is not empty.
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
-*/
--- AlterTable
-ALTER TABLE "Post" DROP CONSTRAINT "Post_pkey",
-DROP COLUMN "authorId",
-ADD COLUMN     "userId" TEXT NOT NULL,
-ALTER COLUMN "id" DROP DEFAULT,
-ALTER COLUMN "id" SET DATA TYPE TEXT,
-ALTER COLUMN "title" SET DATA TYPE TEXT,
-ADD CONSTRAINT "Post_pkey" PRIMARY KEY ("id");
-DROP SEQUENCE "Post_id_seq";
+-- CreateTable
+CREATE TABLE "Post" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "title" TEXT NOT NULL,
+    "content" TEXT,
+    "published" BOOLEAN NOT NULL DEFAULT false,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Account" (
@@ -45,22 +51,14 @@ CREATE TABLE "Session" (
 );
 
 -- CreateTable
-CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
-    "name" TEXT,
-    "email" TEXT,
-    "emailVerified" TIMESTAMP(3),
-    "image" TEXT,
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "VerificationToken" (
     "identifier" TEXT NOT NULL,
     "token" TEXT NOT NULL,
     "expires" TIMESTAMP(3) NOT NULL
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
@@ -69,13 +67,13 @@ CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provi
 CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
 CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
+
+-- AddForeignKey
+ALTER TABLE "Post" ADD CONSTRAINT "Post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
