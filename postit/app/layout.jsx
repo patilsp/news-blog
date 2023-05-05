@@ -19,9 +19,7 @@ export default function RootLayout({ children }) {
       */}
       
       <head />
-      <body
-        className={`mx-4 md:mx-48 xl:mx-96 ${roboto.variable} font-sans bg-gray-200`}
-      >
+      <body className={`mx-2 md:mx-10 xl:mx-60 ${roboto.variable} font-sans bg-gray-200`}>
         <QueryWrapper>
           <AuthContext>
             <Nav />

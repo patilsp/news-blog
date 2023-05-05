@@ -5,7 +5,7 @@ import { authOptions } from "../auth/[...nextauth]"
 export default async function handler(req, res) {
   const session = await unstable_getServerSession(req, res, authOptions)
   if (!session) {
-    return res.status(401).json({ message: "Please signin to post a comment." })
+    return res.status(401).json({ message: "Please sign in to post a comment." })
   }
   //Get User
   const prismaUser = await prisma.user.findUnique({
